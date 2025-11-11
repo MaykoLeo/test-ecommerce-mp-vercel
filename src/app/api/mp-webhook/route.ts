@@ -17,21 +17,31 @@ export async function POST(req: Request) {
     try {
       const payment = await new Payment(client).get({id: paymentId});
 
-      if (payment && payment.external_reference && payment.status === 'approved') {
+      if (payment && payment.external_reference) {
         const orderId = payment.external_reference;
-        console.log(`Payment for order ${orderId} approved. Updating status.`);
+        const status = payment.status;
 
-        await db.order.updateStatus(orderId, 'paid');
-        console.log(`Order ${orderId} status updated to paid.`);
+        if (status === 'approved') {
+          console.log(`Payment for order ${orderId} APPROVED. Updating status.`);
+          await db.order.updateStatus(orderId, 'paid');
+          console.log(`Order ${orderId} status updated to paid.`);
+        } else if (status === 'rejected') {
+          console.log(`Payment for order ${orderId} REJECTED.`);
+          // Opcional: Aquí podrías añadir lógica para manejar pagos rechazados,
+          // como notificar al usuario o cambiar el estado de la orden a 'rejected'.
+        } else {
+          console.log(
+            `Payment for order ${orderId} has status: ${status}. No action taken.`
+          );
+        }
       }
     } catch (error) {
       console.error('Error processing webhook:', error);
-      // We return 200 OK even if processing fails.
-      // Mercado Pago only cares that we received the notification.
-      // If we returned a 500, it would keep retrying.
-      return NextResponse.json({status: 'error', message: 'Failed to process webhook'});
+      // Devolvemos 200 OK para que Mercado Pago no reintente la notificación.
+      // El error ya está registrado en nuestros logs.
     }
   }
-  // Always return a 200 OK response to acknowledge receipt of the webhook
+
+  // Siempre devolver una respuesta 200 OK para confirmar la recepción del webhook.
   return NextResponse.json({status: 'ok'});
 }
