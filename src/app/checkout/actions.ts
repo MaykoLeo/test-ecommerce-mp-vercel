@@ -72,7 +72,7 @@ export async function createOrder(formData: FormData) {
       },
       auto_return: 'approved',
       external_reference: order.id,
-      notification_url: `${process.env.NEXT_PUBLIC_URL}/api/mp-webhook?source_news=webhooks`,
+      notification_url: `${process.env.NEXT_PUBLIC_URL}/api/mp-webhook`,
     },
   });
 
