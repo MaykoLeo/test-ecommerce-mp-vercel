@@ -26,9 +26,12 @@ export async function POST(req: Request) {
       }
     } catch (error) {
       console.error('Error processing webhook:', error);
-      return NextResponse.json({error: 'Failed to process webhook'}, {status: 500});
+      // We return 200 OK even if processing fails.
+      // Mercado Pago only cares that we received the notification.
+      // If we returned a 500, it would keep retrying.
+      return NextResponse.json({status: 'error', message: 'Failed to process webhook'});
     }
   }
-
+  // Always return a 200 OK response to acknowledge receipt of the webhook
   return NextResponse.json({status: 'ok'});
 }
