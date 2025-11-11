@@ -21,7 +21,7 @@ function SubmitButton() {
   const {pending} = useFormStatus();
   return (
     <Button type="submit" size="lg" className="mt-6 w-full" disabled={pending}>
-      {pending ? 'Processing...' : 'Pay with Mercado Pago'}
+      {pending ? 'Processing...' : 'Continue to Payment'}
     </Button>
   );
 }

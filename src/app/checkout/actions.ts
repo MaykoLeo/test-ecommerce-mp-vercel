@@ -5,15 +5,7 @@ import {z} from 'zod';
 import {products} from '@/lib/products';
 import {db} from '@/lib/db';
 import type {CartItem} from '@/lib/types';
-
-const shippingAddressSchema = z.object({
-  name: z.string().min(2, 'Name is required'),
-  address: z.string().min(5, 'Address is required'),
-  city: z.string().min(2, 'City is required'),
-  state: z.string().min(2, 'State/Province is required'),
-  zip: z.string().min(3, 'Postal code is required'),
-  country: z.string().min(2, 'Country is required'),
-});
+import {MercadoPagoConfig, Preference} from 'mercadopago';
 
 const checkoutSchema = z.object({
   cartItems: z.string(), // JSON string of CartItem[]
@@ -25,13 +17,16 @@ const checkoutSchema = z.object({
   country: z.string().min(2, 'Country is required'),
 });
 
+const client = new MercadoPagoConfig({
+  accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
+});
+
 export async function createOrder(formData: FormData) {
   const rawFormData = Object.fromEntries(formData.entries());
 
   const parsedData = checkoutSchema.safeParse(rawFormData);
 
   if (!parsedData.success) {
-    // This is a basic error handling. In a real app, you'd return field-specific errors.
     console.error(parsedData.error.flatten().fieldErrors);
     throw new Error('Invalid form data. Please check your inputs.');
   }
@@ -43,7 +38,6 @@ export async function createOrder(formData: FormData) {
     throw new Error('Cart is empty.');
   }
 
-  // Recalculate total on the server to ensure price integrity
   const total = cartItems.reduce((acc, item) => {
     const product = products.find((p) => p.id === item.product.id);
     if (!product) {
@@ -52,21 +46,35 @@ export async function createOrder(formData: FormData) {
     return acc + product.price * item.quantity;
   }, 0);
 
-  // Here you would integrate with Mercado Pago SDK to create a payment preference
-  // For example:
-  // const preference = await mercadopago.preferences.create({ ... });
-  // const preferenceId = preference.body.id;
-  // For this demo, we'll simulate a successful payment process.
-
   const order = await db.order.create({
     items: cartItems,
     shippingAddress,
     total,
   });
 
-  // Simulate successful payment and update order status
-  await db.order.updateStatus(order.id, 'paid');
+  const preference = await new Preference(client).create({
+    body: {
+      items: cartItems.map((item) => ({
+        id: item.product.id,
+        title: item.product.name,
+        quantity: item.quantity,
+        unit_price: item.product.price,
+        currency_id: 'ARS',
+      })),
+      payer: {
+        name: shippingAddress.name,
+        // email: would need to collect this
+      },
+      back_urls: {
+        success: `${process.env.NEXT_PUBLIC_URL}/order/${order.id}`,
+        failure: `${process.env.NEXT_PUBLIC_URL}/cart`,
+        pending: `${process.env.NEXT_PUBLIC_URL}/order/${order.id}`,
+      },
+      auto_return: 'approved',
+      external_reference: order.id,
+      notification_url: `${process.env.NEXT_PUBLIC_URL}/api/mp-webhook?source_news=webhooks`,
+    },
+  });
 
-  // Redirect to order confirmation page
-  redirect(`/order/${order.id}`);
+  redirect(preference.init_point!);
 }

@@ -5,6 +5,9 @@ import type {Order} from './types';
 
 let orders: Order[] = [];
 
+// In-memory store for preferences
+const preferences = new Map<string, any>();
+
 export const db = {
   order: {
     create: async (
@@ -25,13 +28,21 @@ export const db = {
     },
     updateStatus: async (
       id: string,
-      status: 'paid' | 'shipped'
+      status: 'paid' | 'shipped' | 'pending'
     ): Promise<Order | null> => {
       const orderIndex = orders.findIndex((o) => o.id === id);
       if (orderIndex === -1) return null;
 
       orders[orderIndex].status = status;
       return orders[orderIndex];
+    },
+  },
+  preference: {
+    create: async (orderId: string, preferenceId: string) => {
+      preferences.set(orderId, preferenceId);
+    },
+    findByOrderId: async (orderId: string) => {
+      return preferences.get(orderId);
     },
   },
 };
