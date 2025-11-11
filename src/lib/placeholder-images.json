@@ -1,3 +1,34 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-perfume",
+      "description": "Elegant perfume bottle on a reflective surface",
+      "imageUrl": "https://images.unsplash.com/photo-1615160460366-2c9a41771b51?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxwZXJmdW1lJTIwYm90dGxlfGVufDB8fHx8MTc2Mjc4NDQyNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "perfume bottle"
+    },
+    {
+      "id": "perfume-1",
+      "description": "Scent of Serenity perfume bottle",
+      "imageUrl": "https://images.unsplash.com/photo-1585218334450-afcf929da36e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwZXJmdW1lJTIwYm90dGxlfGVufDB8fHx8MTc2Mjc4NDQyNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "perfume bottle"
+    },
+    {
+      "id": "perfume-2",
+      "description": "Midnight Bloom perfume bottle",
+      "imageUrl": "https://images.unsplash.com/photo-1608721279136-cd41b752fa41?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwZXJmdW1lJTIwYm90dGxlfGVufDB8fHx8MTc2Mjc4NDQyNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "perfume bottle"
+    },
+    {
+      "id": "perfume-3",
+      "description": "Golden Hour perfume bottle",
+      "imageUrl": "https://images.unsplash.com/photo-1608721279136-cd41b752fa41?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwZXJmdW1lJTIwYm90dGxlfGVufDB8fHx8MTc2Mjc4NDQyNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "perfume bottle"
+    },
+    {
+      "id": "perfume-4",
+      "description": "Ocean Breeze perfume bottle",
+      "imageUrl": "https://images.unsplash.com/photo-1615160460366-2c9a41771b51?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxwZXJmdW1lJTIwYm90dGxlfGVufDB8fHx8MTc2Mjc4NDQyNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "perfume bottle"
+    }
+  ]
 }
